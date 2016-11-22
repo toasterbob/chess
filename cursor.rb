@@ -77,16 +77,21 @@ class Cursor
 
   def handle_key(key)
     case key
-    when :return || :space then @cursor_pos
-    when MOVES.keys.include?(key) then update_pos(MOVES[key])
-    when :ctr_c then Process.exit(0)
+    when :return, :space
+      @cursor_pos
+    when :left, :right, :up, :down then update_pos(MOVES[key])
+    when :ctr_c #doesn't seem to work
+      Process.exit 0
     end
   end
+
+
 
   def update_pos(diff)
     x, y = diff
     i, j = @cursor_pos
-    @cursor_pos = [(i + x), (j + y)]
+    new_pos = [(i + x), (j + y)]
+    @cursor_pos = new_pos if board.in_bounds?(new_pos)
   end
 
 
