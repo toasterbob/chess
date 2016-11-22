@@ -3,7 +3,7 @@
 class Piece
   attr_accessor :value
 
-  def initialize(value = "-")
+  def initialize(value = " ")
     @value = value
   end
 

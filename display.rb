@@ -15,12 +15,20 @@ class Display
       row_output = ""
       (0..7).each do |col|
         if [row, col] == @cursor.cursor_pos
-          row_output += "#{board.grid[row][col].value} ".colorize(:color => :black, :background => :red)
+          row_output += " #{board.grid[row][col].value} ".colorize(:color => :black, :background => :red)
         else
-          if col.even?
-            row_output += "#{board.grid[row][col].value} ".colorize(:background => :light_blue)
+          if row.even?
+            if col.even?
+              row_output += " #{board.grid[row][col].value} ".colorize(:background => :light_blue)
+            else
+              row_output += " #{board.grid[row][col].value} ".colorize(:background => :white)
+            end
           else
-            row_output += "#{board.grid[row][col].value} ".colorize(:background => :white)
+            if col.odd?
+              row_output += " #{board.grid[row][col].value} ".colorize(:background => :light_blue)
+            else
+              row_output += " #{board.grid[row][col].value} ".colorize(:background => :white)
+            end
           end
         end
       end

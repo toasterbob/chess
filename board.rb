@@ -10,7 +10,7 @@ class Board
   def populate
     [0, 1, 6, 7].each do |row|
       (0..7).each do |col|
-        @grid[row][col] = Piece.new("*")
+        @grid[row][col] = Piece.new("\u2659")
       end
     end
   end
@@ -35,7 +35,7 @@ class Board
   end
 
   def render
-    
+
 
   end
 
