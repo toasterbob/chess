@@ -4,13 +4,14 @@ require_relative 'cursor'
 
 
 class Display
-  attr_accessor :cursor, :board, :start
+  attr_accessor :cursor, :board, :start, :moves
 
   def initialize(board = Board.new)
     @board = board
     @cursor = Cursor.new([7,0], board)
     @start = nil
     @finish = nil
+    @moves = nil
   end
 
   def render
@@ -22,6 +23,8 @@ class Display
           row_output += " #{board.grid[row][col].to_s} ".colorize(:color => :black, :background => c_color)
         elsif @start && [row, col] == @start
           row_output += " #{board.grid[row][col].to_s} ".colorize(:color => :black, :background => :green)
+        elsif @moves && @moves.include?([row, col])
+          row_output += " #{board.grid[row][col].to_s} ".colorize(:color => :black, :background => :light_green)
         else
           if row.even?
             if col.even?
@@ -50,9 +53,11 @@ class Display
     render
     p "Please select piece."
     x = 0
-    while x < 100000
+    while x < 1000000
       @start = cursor.cursor_pos if @cursor.selected
-      p @start if @cursor.selected
+      @start if @cursor.selected
+      a, b = @start if @cursor.selected
+      @moves = (@board.grid[a][b].moves) if @cursor.selected
       break if @cursor.selected
       cursor.get_input
       system("clear")
@@ -63,17 +68,19 @@ class Display
     system("clear")
     render
     p "Where would you like to move it?"
-    while x < 100000
+    while x < 1000000
       @finish = cursor.cursor_pos if !@cursor.selected
       if @start == @finish
         @start = nil
         @finish = nil
+        @moves = nil
         move_pieces_cursor
       end
       if @finish
         @board.move_piece(@start, @finish)
         @start = nil
         @finish = nil
+        @moves = nil
         move_pieces_cursor
       end
       cursor.get_input
