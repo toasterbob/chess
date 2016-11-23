@@ -84,3 +84,9 @@ board.grid[1][5] = NullPiece.instance
 p board.grid[0][2].moves
 p board.grid[0][0].moves
 p board.grid[0][4].moves
+p board.grid[0][1].moves
+p board.grid[0][3].moves
+#  board.grid[3][6] = Pawn.new
+p board.grid[1][6].moves
+#  board.grid[4][6] = Pawn.new
+p board.grid[6][6].moves

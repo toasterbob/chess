@@ -62,15 +62,95 @@ module SlidingPiece #need to implement move direction
     move_arr
   end
 
-
 end
 
 module SteppingPiece
-  #
+
+
+  def moves
+    board = self.board
+    pos = self.pos
+    move_arr = []
+
+    king_step = [[-1, -1], [-1, 0], [-1, 1], [0, -1],
+                 [0, 1], [1, -1], [1, 0], [1, 1]
+                ]
+    knight_jump = [[-1, -2], [-1, 2], [1, -2], [1, 2],
+                   [-2, 1], [-2, -1], [2, 1], [2, -1]
+                  ]
+
+    case self.value
+    when :king
+       movement = king_step
+     when :knight
+       movement = knight_jump
+     end
+
+    movement.each do |pos2|
+      x, y = pos
+      x2, y2 = pos2
+      x, y = (x + x2), (y + y2)
+      if board.in_bounds?([x,y]) && board.valid_move?(pos, [x,y])
+        move_arr << [x, y]
+      end
+    end
+     move_arr
+   end
+
 end
 
 class Pawn < Piece
+  def moves
+    board = self.board
+    pos = self.pos
+    color = self.color
+    move_arr = []
 
+    #move two spaces on first move
+    if pos[0] == 1 && color == :red
+      x, y = pos
+      x += 2 #can move twice on first move
+      case1 = board.in_bounds?([x,y]) && board.valid_move?(pos, [x,y])
+      case2 = board.grid[x][y] == NullPiece.instance #space empty
+      case3 = board.grid[x-1][y] == NullPiece.instance #space behind empty
+      #pawn cannot jump over existing piece
+      move_arr << [x, y] if case1 && case2 && case3
+    elsif pos[0] == 6 && color == :black
+      x, y = pos
+      x -= 2 #can move twice on first move
+      case1 = board.in_bounds?([x,y]) && board.valid_move?(pos, [x,y])
+      case2 = board.grid[x][y] == NullPiece.instance #space empty
+      case3 = board.grid[x+1][y] == NullPiece.instance #space behind empty
+      #pawn cannot jump over existing piece
+      move_arr << [x, y] if case1 && case2 && case3
+    end
+
+    #move one space
+    if color == :red
+      x, y = pos
+      x +=1
+      case1 = board.in_bounds?([x,y]) && board.valid_move?(pos, [x,y])
+      case2 = board.grid[x][y] == NullPiece.instance #space empty
+      move_arr << [x, y] if case1 && case2
+    elsif color == :black
+      x, y = pos
+      x -=1
+      case1 = board.in_bounds?([x,y]) && board.valid_move?(pos, [x,y])
+      case2 = board.grid[x][y] == NullPiece.instance #space empty
+      move_arr << [x, y] if case1 && case2
+    end
+
+    #take pieces diagonally 
+    if color == :red
+
+    elsif color == :black
+
+
+    end
+
+
+     move_arr
+   end
   def symbol
     "\u2659".colorize(color)
   end
@@ -98,9 +178,12 @@ class Bishop < Piece
 end
 
 class Knight < Piece
+  include SteppingPiece
+
   def symbol
     "\u2658".colorize(color)
   end
+
 end
 
 class Queen < Piece
@@ -113,9 +196,12 @@ class Queen < Piece
 end
 
 class King < Piece
+  include SteppingPiece
+
   def symbol
     "\u2654".colorize(color)
   end
+
 end
 
 class NullPiece < Piece
