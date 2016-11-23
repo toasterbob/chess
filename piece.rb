@@ -140,17 +140,44 @@ class Pawn < Piece
       move_arr << [x, y] if case1 && case2
     end
 
-    #take pieces diagonally 
+    #take pieces diagonally
+    #diagonal = [[-1, -1], [1, 1], [1, -1], [-1, 1]]
     if color == :red
+      x, y = pos
+      x += 1
+      y += 1
+      case1 = board.in_bounds?([x,y]) && board.valid_move?(pos, [x,y])
+      case2 = board.grid[x][y] != NullPiece.instance #space not empty
+      move_arr << [x, y] if case1 && case2
+
+      x, y = pos
+      x += 1
+      y -= 1
+      case1 = board.in_bounds?([x,y]) && board.valid_move?(pos, [x,y])
+      case2 = board.grid[x][y] != NullPiece.instance #space not empty
+      move_arr << [x, y] if case1 && case2
 
     elsif color == :black
+      x, y = pos
+      x -= 1
+      y -= 1
+      case1 = board.in_bounds?([x,y]) && board.valid_move?(pos, [x,y])
+      case2 = board.grid[x][y] != NullPiece.instance #space not empty
+      move_arr << [x, y] if case1 && case2
 
+      x, y = pos
+      x -= 1
+      y += 1
+      case1 = board.in_bounds?([x,y]) && board.valid_move?(pos, [x,y])
+      case2 = board.grid[x][y] != NullPiece.instance #space not empty
+      move_arr << [x, y] if case1 && case2
 
     end
 
 
      move_arr
-   end
+  end
+
   def symbol
     "\u2659".colorize(color)
   end

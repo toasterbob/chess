@@ -4,19 +4,24 @@ require_relative 'cursor'
 
 
 class Display
-  attr_accessor :cursor, :board 
+  attr_accessor :cursor, :board, :start
 
-  def initialize(board= Board.new)
+  def initialize(board = Board.new)
     @board = board
     @cursor = Cursor.new([7,0], board)
+    @start = nil
+    @finish = nil
   end
 
-  def render(board = Board.new)
+  def render
+    c_color = @cursor.selected ? :green : :yellow
     (0..7).each do |row|
       row_output = ""
       (0..7).each do |col|
         if [row, col] == @cursor.cursor_pos
-          row_output += " #{board.grid[row][col].to_s} ".colorize(:color => :black, :background => :yellow)
+          row_output += " #{board.grid[row][col].to_s} ".colorize(:color => :black, :background => c_color)
+        elsif @start && [row, col] == @start
+          row_output += " #{board.grid[row][col].to_s} ".colorize(:color => :black, :background => :green)
         else
           if row.even?
             if col.even?
@@ -38,14 +43,43 @@ class Display
 
   end
 
-  def move_cursor_test
+
+
+  def move_pieces_cursor
     system("clear")
     render
+    p "Please select piece."
     x = 0
     while x < 100000
+      @start = cursor.cursor_pos if @cursor.selected
+      p @start if @cursor.selected
+      break if @cursor.selected
       cursor.get_input
       system("clear")
       render
+      p "Please select piece."
+      x += 1
+    end
+    system("clear")
+    render
+    p "Where would you like to move it?"
+    while x < 100000
+      @finish = cursor.cursor_pos if !@cursor.selected
+      if @start == @finish
+        @start = nil
+        @finish = nil
+        move_pieces_cursor
+      end
+      if @finish
+        @board.move_piece(@start, @finish)
+        @start = nil
+        @finish = nil
+        move_pieces_cursor
+      end
+      cursor.get_input
+      system("clear")
+      render
+      p "Where would you like to move it?"
       x += 1
     end
   end
@@ -54,7 +88,7 @@ end
 
 d = Display.new
 d.render
-d.move_cursor_test
+d.move_pieces_cursor
 
 
 # puts "  #{(0...size).to_a.join(" ")}"

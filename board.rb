@@ -29,11 +29,18 @@ class Board
 
   def move_piece(start_pos, end_pos)
     x, y = start_pos
-    x2, y2 = end_pos
-    if valid_move?(start_pos, end_pos)
+    move_list = grid[x][y].moves
+    # x2, y2 = end_pos
+    # if valid_move?(start_pos, end_pos)
+    #   @grid[x][y], @grid[x2][y2] = null_piece, @grid[x][y]
+    # end
+    if move_list.include?(end_pos)
+      x2, y2 = end_pos
       @grid[x][y], @grid[x2][y2] = null_piece, @grid[x][y]
+      @grid[x2][y2].pos = [x2, y2] #updated piece's position
+      return true
     end
-
+    false
   end
 
   def in_bounds?(pos)
@@ -75,18 +82,26 @@ class Board
 
 end
 
-board = Board.new
-board.grid[1][1] = NullPiece.instance
-board.grid[1][3] = NullPiece.instance
-board.grid[1][0] = NullPiece.instance
-board.grid[1][4] = NullPiece.instance
-board.grid[1][5] = NullPiece.instance
-p board.grid[0][2].moves
-p board.grid[0][0].moves
-p board.grid[0][4].moves
-p board.grid[0][1].moves
-p board.grid[0][3].moves
-#  board.grid[3][6] = Pawn.new
-p board.grid[1][6].moves
-#  board.grid[4][6] = Pawn.new
-p board.grid[6][6].moves
+#Testing piece moves
+# board = Board.new
+# board.grid[1][1] = NullPiece.instance
+# board.grid[1][3] = NullPiece.instance
+# board.grid[1][0] = NullPiece.instance
+# board.grid[1][4] = NullPiece.instance
+# board.grid[1][5] = NullPiece.instance
+# p board.grid[0][2].moves
+# p board.grid[0][0].moves
+# p board.grid[0][4].moves
+# p board.grid[0][1].moves
+# p board.grid[0][3].moves
+#   board.grid[2][5] = Pawn.new(:red, self, nil, :pawn)
+#   board.grid[2][7] = Pawn.new(:red, self, nil, :pawn)
+# p board.grid[1][6].moves
+# #  board.grid[4][6] = Pawn.new
+#   board.grid[5][5] = Pawn.new(:red, self, nil, :pawn)
+#   board.grid[5][7] = Pawn.new(:red, self, nil, :pawn)
+# p board.grid[6][6].moves
+# p board.grid[6][0].value
+# p board.move_piece([0,0], [6,0])
+# p board.grid[6][0].value
+# p board.grid[6][0]
