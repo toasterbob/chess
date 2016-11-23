@@ -80,7 +80,7 @@ class Cursor
     when :return, :space
       @cursor_pos
     when :left, :right, :up, :down then update_pos(MOVES[key])
-    when :ctr_c #doesn't seem to work
+    when :ctrl_c #doesn't seem to work
       Process.exit 0
     end
   end

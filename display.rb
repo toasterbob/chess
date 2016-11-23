@@ -4,9 +4,10 @@ require_relative 'cursor'
 
 
 class Display
-  attr_accessor :cursor
+  attr_accessor :cursor, :board 
 
   def initialize(board= Board.new)
+    @board = board
     @cursor = Cursor.new([7,0], board)
   end
 
@@ -15,7 +16,7 @@ class Display
       row_output = ""
       (0..7).each do |col|
         if [row, col] == @cursor.cursor_pos
-          row_output += " #{board.grid[row][col].to_s} ".colorize(:color => :black, :background => :red)
+          row_output += " #{board.grid[row][col].to_s} ".colorize(:color => :black, :background => :yellow)
         else
           if row.even?
             if col.even?
@@ -41,7 +42,7 @@ class Display
     system("clear")
     render
     x = 0
-    while x < 10
+    while x < 100000
       cursor.get_input
       system("clear")
       render
@@ -53,7 +54,7 @@ end
 
 d = Display.new
 d.render
-#d.move_cursor_test
+d.move_cursor_test
 
 
 # puts "  #{(0...size).to_a.join(" ")}"
